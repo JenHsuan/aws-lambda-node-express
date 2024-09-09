@@ -20,4 +20,6 @@ app.use((req: any, res: any, next: any) => {
   });
 });
 
+console.log("application starts!")
+
 exports.handler = serverless(app);
