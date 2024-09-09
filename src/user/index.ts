@@ -6,13 +6,12 @@ const dyamodb = new db.DynamoDB({
 });
 
 module.exports.create = async (event: any) => {
-  const { age, height, income } = JSON.parse(event.body);
+  const { userId, age, height, income } = JSON.parse(event.body);
   
   const params = {
     Item: {
       "UserId": {
-        S: `user_${Math.random()}`
-        //S: `${event.userId}`
+        S: `user_${userId}`
       },
       "Age": {
         N: `${age}`
