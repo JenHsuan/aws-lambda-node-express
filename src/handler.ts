@@ -1,24 +1,9 @@
 const serverless = require("serverless-http");
 const express = require("express");
+const userRoutes = require('./routes/user');
 const app = express();
 
-app.get("/", (req: any, res: any, next: any) => {
-  return res.status(200).json({
-    message: "Hello from root!",
-  });
-});
-
-app.get("/hello", (req: any, res: any, next: any) => {
-  return res.status(200).json({
-    message: "Hello from path!",
-  });
-});
-
-app.use((req: any, res: any, next: any) => {
-  return res.status(404).json({
-    error: "Not Found",
-  });
-});
+//app.use("/user", userRoutes);
 
 console.log("application starts!")
 

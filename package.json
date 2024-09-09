@@ -8,6 +8,7 @@
     "deploy": "export AWS_ACCESS_KEY_ID=xxx && export AWS_SECRET_ACCESS_KEY=xxx && serverless deploy --region ap-southeast-2"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.645.0",
     "express": "^4.19.2",
     "serverless-http": "^3.2.0",
     "serverless-offline": "^13.8.0"
