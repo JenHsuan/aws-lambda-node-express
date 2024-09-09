@@ -2,8 +2,18 @@
   "name": "aws-lambda-node-express",
   "version": "1.0.0",
   "description": "",
+  "scripts": {
+    "build": "rimraf dist && tsc"
+  },
   "dependencies": {
     "express": "^4.19.2",
-    "serverless-http": "^3.2.0"
+    "serverless-http": "^3.2.0",
+    "serverless-offline": "^13.8.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "rimraf": "^6.0.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
   }
 }
