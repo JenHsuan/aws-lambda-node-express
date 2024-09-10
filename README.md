@@ -77,27 +77,28 @@ When you are done developing, don't forget to run `serverless deploy` to deploy 
 
 
 ### Testing
-* post
-```
-curl -k -X POST https://1xnsneeuli.execute-api.ap-southeast-2.amazonaws.com/user -H "Content-Type: application/json" -d '{"userId": "1", "age":1,"height":1,"income":1}'
-```
-
-* get all
-```
-curl https://1xnsneeuli.execute-api.ap-southeast-2.amazonaws.com/user
-```
-
-* get single
-```
-curl https://1xnsneeuli.execute-api.ap-southeast-2.amazonaws.com/user\?userId=1
-```
-
-* delete single
-```
-curl -X "DELETE"  https://1xnsneeuli.execute-api.ap-southeast-2.amazonaws.com/user\?userId=1
-```
-
 * sign in
 ```
 curl -k -X POST https://1xnsneeuli.execute-api.ap-southeast-2.amazonaws.com/authentication -H "Content-Type: application/json" -d '{"username":"xxx","password":"xxx"}'
 ```
+
+* post
+```
+curl -H "Authorization: " -k -X POST https://1xnsneeuli.execute-api.ap-southeast-2.amazonaws.com/user -H "Content-Type: application/json" -d '{"userId": "1", "age":1,"height":1,"income":111}'
+```
+
+* get all
+```
+curl -H "Authorization: " https://1xnsneeuli.execute-api.ap-southeast-2.amazonaws.com/user
+```
+
+* get single
+```
+curl -H "Authorization: " https://1xnsneeuli.execute-api.ap-southeast-2.amazonaws.com/user\?userId=1
+```
+
+* delete single
+```
+curl -H "Authorization: " -X "DELETE"  https://1xnsneeuli.execute-api.ap-southeast-2.amazonaws.com/user\?userId=1
+```
+
