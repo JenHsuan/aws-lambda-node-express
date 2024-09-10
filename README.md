@@ -96,3 +96,8 @@ curl https://1xnsneeuli.execute-api.ap-southeast-2.amazonaws.com/user\?userId=1
 ```
 curl -X "DELETE"  https://1xnsneeuli.execute-api.ap-southeast-2.amazonaws.com/user\?userId=1
 ```
+
+* sign in
+```
+curl -k -X POST https://1xnsneeuli.execute-api.ap-southeast-2.amazonaws.com/authentication -H "Content-Type: application/json" -d '{"username":"xxx","password":"xxx"}'
+```

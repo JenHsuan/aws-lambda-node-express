@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.645.0",
+    "amazon-cognito-identity-js": "^6.3.12",
     "express": "^4.19.2",
     "lodash": "^4.17.21",
     "serverless-http": "^3.2.0",
