@@ -81,3 +81,18 @@ When you are done developing, don't forget to run `serverless deploy` to deploy 
 ```
 curl -k -X POST https://1xnsneeuli.execute-api.ap-southeast-2.amazonaws.com/user -H "Content-Type: application/json" -d '{"userId": "1", "age":1,"height":1,"income":1}'
 ```
+
+* get all
+```
+curl https://1xnsneeuli.execute-api.ap-southeast-2.amazonaws.com/user
+```
+
+* get single
+```
+curl https://1xnsneeuli.execute-api.ap-southeast-2.amazonaws.com/user\?userId=1
+```
+
+* delete single
+```
+curl -X "DELETE"  https://1xnsneeuli.execute-api.ap-southeast-2.amazonaws.com/user\?userId=1
+```

@@ -83,7 +83,7 @@ module.exports.list = async (event: any, res: any) => {
  * @param {number} params.Item.Income - The user's income.
  * @param {string} params.TableName - The name of the table to insert the user into.
  */
-module.exports.create = async (event: any) => {
+module.exports.create = async (event: any, res: any) => {
   const { userId, age, height, income } = JSON.parse(event.body);
   
   const params = {
@@ -113,10 +113,48 @@ module.exports.create = async (event: any) => {
       };
     } else {
      console.log(data);
-     return {
-       statusCode: 200,
-       body: null,
-     };
+     res.json(data);
     }
   });
 };
+
+/**
+ * Retrieves the parameters for fetching a user from the database.
+ * @param userId - The ID of the user.
+ * @param tableId - The ID of the table.
+ * @returns The parameters object for fetching the user.
+ */
+module.exports.delete = async (event: any, res: any) => {
+  const userId = event.query["userId"];
+  if (_.isNil(userId)) {
+    return {
+      statusCode: 400,
+      body: "userId is required",
+    };
+  }
+
+  const params = {
+    Key: {
+      "UserId": {
+        S: `user_${userId}`
+      }
+    },
+    TableName: tableId
+  }
+
+  dyamodb.deleteItem(params, function(err: any, data: any) {
+    if (err) {
+      console.log(err);
+      return {
+        statusCode: 500,
+        body: err.errorMessage,
+      };
+    } else {
+      console.log(data);
+      return {
+        statusCode: 200,
+        body: null,
+      };
+    }
+  });
+}
