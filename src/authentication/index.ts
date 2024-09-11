@@ -1,9 +1,15 @@
 import { AuthenticationDetails, CognitoUser, CognitoUserPool, CognitoUserSession } from "amazon-cognito-identity-js";
 import { CognitoJwtVerifier } from "aws-jwt-verify";
+import {
+	ReasonPhrases,
+	StatusCodes,
+} from 'http-status-codes';
+
+const utility = require('../utility/index');
 
 const POOL_DATA = {
-  UserPoolId: 'xxx',
-  ClientId: 'xxx'
+  UserPoolId: process.env.UserPoolId!,
+  ClientId: process.env.ClientId!
 };
 
 const userPool = new CognitoUserPool(POOL_DATA);
@@ -14,6 +20,11 @@ const userPool = new CognitoUserPool(POOL_DATA);
  * @param res - The response object used to send the response.
  */
 module.exports.signin = async (event: any, res: any) => {
+  if (!utility.isJsonString(event.body)) {
+    res.status(StatusCodes.UNAUTHORIZED).send({ error: "Invalid request body"});
+    return;
+  }
+
   const { username, password } = JSON.parse(event.body);
   const authData = {
     Username: username,
@@ -31,11 +42,13 @@ module.exports.signin = async (event: any, res: any) => {
   cognitoUser.authenticateUser(authenticationDetails, {
     onSuccess: (result: CognitoUserSession) => {
       console.log(result)
-      res.status(200).send(result.getAccessToken().getJwtToken());
+      res.status(StatusCodes.OK).send(result.getAccessToken().getJwtToken());
+      return;
     },
     onFailure: (err) => {
       console.log(err);
-      res.status(500).send({ error: err.errorMessage});
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ error: err.errorMessage});
+      return;
     }
   });
 }

@@ -1,7 +1,12 @@
 import * as _ from 'lodash';
 import * as db from "@aws-sdk/client-dynamodb";
+import {
+	ReasonPhrases,
+	StatusCodes,
+} from 'http-status-codes';
 
 const authentication = require('../authentication/index');
+const utility = require('../utility/index');
 
 const dyamodb = new db.DynamoDB({
   region: 'ap-southeast-2',
@@ -22,12 +27,14 @@ module.exports.list = async (event: any, res: any) => {
 
   const token = event.headers["authorization"];
   if (_.isNil(token)) {
-    res.status(401).send("Unauthorized");
+    res.status(StatusCodes.UNAUTHORIZED).send(ReasonPhrases.UNAUTHORIZED);
+    return;
   }
 
   const isTokenValid = await authentication.verify(token);
   if (!isTokenValid) {
-    res.status(401).send("Unauthorized");
+    res.status(StatusCodes.UNAUTHORIZED).send(ReasonPhrases.UNAUTHORIZED);
+    return;
   }
 
   if (_.isNil(userId)) {
@@ -39,17 +46,20 @@ module.exports.list = async (event: any, res: any) => {
     dyamodb.scan(params, function(err: any, data: any) {
       if (err) {
         console.log(err);
-        res.status(500).send({ error: err.errorMessage});
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ error: err.errorMessage});
+        return;
       } 
       
       const items = data.Items.map((dataField: any) => {
         return {
+          userId: dataField.UserId.S,
           age: +dataField.Age.N,
           height: +dataField.Height.N,
           income: +dataField.Income.N
         }
       });
       res.json(items);
+      return;
     });
   } else {
     //specific
@@ -65,7 +75,8 @@ module.exports.list = async (event: any, res: any) => {
     dyamodb.getItem(params, function(err: any, data: any) {
       if (err) {
         console.log(err);
-        res.status(500).send({ error: err.errorMessage});
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ error: err.errorMessage});
+        return;
       } 
       
       const item = {
@@ -75,6 +86,7 @@ module.exports.list = async (event: any, res: any) => {
       }
       
       res.json([ item ]);
+      return;
     });
   }
 };
@@ -90,14 +102,21 @@ module.exports.list = async (event: any, res: any) => {
  * @param {string} params.TableName - The name of the table to insert the user into.
  */
 module.exports.create = async (event: any, res: any) => {
+  if (!utility.isJsonString(event.body)) {
+    res.status(StatusCodes.UNAUTHORIZED).send({ error: "Invalid request body"});
+    return;
+  }
+
   const token = event.headers["authorization"];
   if (_.isNil(token)) {
-    res.status(401).send("Unauthorized");
+    res.status(StatusCodes.UNAUTHORIZED).send(ReasonPhrases.UNAUTHORIZED);
+    return;
   }
 
   const isTokenValid = await authentication.verify(token);
   if (!isTokenValid) {
-    res.status(401).send("Unauthorized");
+    res.status(StatusCodes.UNAUTHORIZED).send(ReasonPhrases.UNAUTHORIZED);
+    return;
   }
 
   const { userId, age, height, income } = JSON.parse(event.body);
@@ -123,10 +142,12 @@ module.exports.create = async (event: any, res: any) => {
   dyamodb.putItem(params, function(err: any, data: any) {
     if (err) {
       console.log(err);
-      res.status(500).send({ error: err.errorMessage});
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ error: err.errorMessage});
+      return;
     } else {
-     console.log(data);
-     res.json(data);
+      console.log(data);
+      res.json(data);
+      return;
     }
   });
 };
@@ -140,17 +161,20 @@ module.exports.create = async (event: any, res: any) => {
 module.exports.delete = async (event: any, res: any) => {
   const token = event.headers["authorization"];
   if (_.isNil(token)) {
-    res.status(401).send("Unauthorized");
+    res.status(StatusCodes.UNAUTHORIZED).send(ReasonPhrases.UNAUTHORIZED);
+    return;
   }
 
   const isTokenValid = await authentication.verify(token);
   if (!isTokenValid) {
-    res.status(401).send("Unauthorized");
+    res.status(StatusCodes.UNAUTHORIZED).send(ReasonPhrases.UNAUTHORIZED);
+    return;
   }
   
   const userId = event.query["userId"];
   if (_.isNil(userId)) {
     res.status(400).send("userId is required");
+    return;
   }
 
   const params = {
@@ -165,13 +189,12 @@ module.exports.delete = async (event: any, res: any) => {
   dyamodb.deleteItem(params, function(err: any, data: any) {
     if (err) {
       console.log(err);
-      res.status(500).send({ error: err.errorMessage});
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ error: err.errorMessage});
+      return;
     } else {
       console.log(data);
-      return {
-        statusCode: 200,
-        body: null,
-      };
+      res.status(200).send(data);
+      return;
     }
   });
 }

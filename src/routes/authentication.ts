@@ -1,6 +1,6 @@
 const express = require("express");
-const router = express.Router();
 const authentication = require('../authentication/index');
+const router = express.Router();
 
 router.post('/', authentication.signin);
 
