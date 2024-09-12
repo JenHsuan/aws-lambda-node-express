@@ -4,6 +4,7 @@ import {
 	ReasonPhrases,
 	StatusCodes,
 } from 'http-status-codes';
+import express, { Request, Response } from 'express';
 
 const authentication = require('../authentication/index');
 const utility = require('../utility/index');
@@ -22,7 +23,7 @@ const tableId = "userDemo";
  * @param {object} event - The event object containing the query parameters.
  * @param {object} res - The response object to send the list of users.
  */
-module.exports.list = async (event: any, res: any) => {
+module.exports.list = async (event: Request, res: Response) => {
   const userId = event.query["userId"];
 
   const token = event.headers["authorization"];
@@ -101,7 +102,7 @@ module.exports.list = async (event: any, res: any) => {
  * @param {number} params.Item.Income - The user's income.
  * @param {string} params.TableName - The name of the table to insert the user into.
  */
-module.exports.create = async (event: any, res: any) => {
+module.exports.create = async (event: Request, res: Response) => {
   if (!utility.isJsonString(event.body)) {
     res.status(StatusCodes.UNAUTHORIZED).send({ error: "Invalid request body"});
     return;
@@ -158,7 +159,7 @@ module.exports.create = async (event: any, res: any) => {
  * @param tableId - The ID of the table.
  * @returns The parameters object for fetching the user.
  */
-module.exports.delete = async (event: any, res: any) => {
+module.exports.delete = async (event: Request, res: Response) => {
   const token = event.headers["authorization"];
   if (_.isNil(token)) {
     res.status(StatusCodes.UNAUTHORIZED).send(ReasonPhrases.UNAUTHORIZED);
@@ -173,7 +174,7 @@ module.exports.delete = async (event: any, res: any) => {
   
   const userId = event.query["userId"];
   if (_.isNil(userId)) {
-    res.status(400).send("userId is required");
+    res.status(StatusCodes.UNAUTHORIZED).send("userId is required");
     return;
   }
 

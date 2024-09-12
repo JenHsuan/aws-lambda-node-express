@@ -4,6 +4,7 @@ import {
 	ReasonPhrases,
 	StatusCodes,
 } from 'http-status-codes';
+import express, { Request, Response } from 'express';
 
 const utility = require('../utility/index');
 
@@ -19,7 +20,7 @@ const userPool = new CognitoUserPool(POOL_DATA);
  * @param event - The event object containing the request details.
  * @param res - The response object used to send the response.
  */
-module.exports.signin = async (event: any, res: any) => {
+module.exports.signin = async (event: Request, res: Response) => {
   if (!utility.isJsonString(event.body)) {
     res.status(StatusCodes.UNAUTHORIZED).send({ error: "Invalid request body"});
     return;
