@@ -50,6 +50,15 @@ module.exports.signin = async (event: Request, res: Response) => {
       console.log(err);
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ error: err.errorMessage});
       return;
+    },
+    newPasswordRequired(userAttributes, []) {
+      delete userAttributes.email_verified;
+      delete userAttributes.email;
+        cognitoUser.completeNewPasswordChallenge(
+            password,
+            userAttributes,
+            this
+        );
     }
   });
 }
@@ -75,3 +84,4 @@ module.exports.verify = async (accessToken: string): Promise<boolean> => {
     return false;
   }
 };
+
